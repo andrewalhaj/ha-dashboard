@@ -1,0 +1,9 @@
+
+/* ── Rooms: single-tile rooms match Living Room tile size (Option 1, left-aligned, 2026-06-07) ── */
+#rooms-view .rooms-unified-grid.single { grid-template-columns: repeat(3, 1fr); }
+#rooms-view .rooms-unified-grid.single > .room-tile {
+  grid-column: 1; max-width: none; justify-self: stretch;
+}
+#rooms-view .rooms-unified-grid.single > .room-summary-strip {
+  grid-column: 1 / -1; justify-self: stretch; max-width: none;
+}

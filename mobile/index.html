@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#160d12">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Jarvis">
+<title>Jarvis Mobile</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mobile.css">
+</head>
+<body>
+
+<!-- First-run token screen -->
+<div id="token-screen" class="token-screen" style="display:none;">
+  <div class="token-card">
+    <div class="token-title">Connect to Home Assistant</div>
+    <div class="token-help">
+      Paste a <b>Long-Lived Access Token</b>. Create one in HA:
+      <ol>
+        <li>Open HA → tap your profile (bottom-left)</li>
+        <li>Go to the <b>Security</b> tab</li>
+        <li>Scroll to <b>Long-Lived Access Tokens</b> → <b>Create Token</b></li>
+        <li>Name it "Jarvis Mobile", copy it, paste below</li>
+      </ol>
+    </div>
+    <textarea id="token-input" class="token-input" placeholder="Paste token here" autocomplete="off" autocorrect="off" spellcheck="false"></textarea>
+    <button id="token-save" class="token-save">Connect</button>
+    <div id="token-err" class="token-err"></div>
+  </div>
+</div>
+
+<!-- App shell -->
+<div id="app" class="app" style="display:none;">
+
+  <!-- Top status bar -->
+  <header class="topbar">
+    <div class="tb-left">
+      <div id="tb-time" class="tb-time">--:--</div>
+      <div id="tb-date" class="tb-date">--</div>
+    </div>
+    <div class="tb-right">
+      <div id="tb-temp" class="tb-temp">--°</div>
+      <div id="tb-cond" class="tb-cond">--</div>
+    </div>
+  </header>
+
+  <!-- Views -->
+  <main class="views">
+    <!-- HOME -->
+    <section class="view" id="view-home">
+      <!-- Climate hero -->
+      <div class="m-card climate-hero" id="climate-hero">
+        <div class="ch-row">
+          <div>
+            <div class="ch-label">Thermostat</div>
+            <div class="ch-mode" id="ch-mode">--</div>
+          </div>
+          <div class="ch-temp"><span id="ch-cur">--</span><span class="ch-deg">°</span></div>
+        </div>
+        <div class="ch-target">Target <b id="ch-target">--°</b></div>
+      </div>
+
+      <!-- Quick lights -->
+      <div class="m-section-label">Lights</div>
+      <div class="chip-grid" id="light-chips"></div>
+
+      <!-- Air purifiers -->
+      <div class="m-section-label">Air</div>
+      <div class="m-card statline" id="pur-lr" onclick="openPurifierSheet('living_room')">
+        <span class="sl-name">Living Room Purifier</span>
+        <span class="sl-val" id="pur-lr-val">--</span>
+      </div>
+      <div class="m-card statline" id="pur-kt" onclick="openPurifierSheet('dining_room')">
+        <span class="sl-name">Kitchen Purifier</span>
+        <span class="sl-val" id="pur-kt-val">--</span>
+      </div>
+
+      <!-- Dishwasher -->
+      <div class="m-section-label">Kitchen</div>
+      <div class="m-card statline" id="dw-line" onclick="openDishSheet()">
+        <span class="sl-name">Dishwasher</span>
+        <span class="sl-val" id="dw-val">--</span>
+      </div>
+
+      <!-- Servers -->
+      <div class="m-section-label">Servers</div>
+      <div class="server-grid">
+        <div class="m-card server-card">
+          <div class="sc-name">Main</div>
+          <div class="sc-row">CPU <b id="srv-main-cpu">--</b></div>
+          <div class="sc-row">RAM <b id="srv-main-ram">--</b></div>
+        </div>
+        <div class="m-card server-card">
+          <div class="sc-name">Backup</div>
+          <div class="sc-row">CPU <b id="srv-bak-cpu">--</b></div>
+          <div class="sc-row">RAM <b id="srv-bak-ram">--</b></div>
+        </div>
+      </div>
+
+      <div class="m-foot">Jarvis Mobile</div>
+    </section>
+
+    <!-- ROOMS -->
+    <section class="view" id="view-rooms" hidden>
+      <div class="room-switch" id="room-switch">
+        <button class="rs-btn active" data-room="living_room">Living Room</button>
+        <button class="rs-btn" data-room="master_bedroom">Master Bedroom</button>
+        <button class="rs-btn" data-room="office">Office</button>
+        <button class="rs-btn" data-room="bathroom">Bathroom</button>
+        <button class="rs-btn" data-room="kitchen">Kitchen</button>
+        <button class="rs-btn" data-room="basement">Basement</button>
+      </div>
+      <div id="room-cards"></div>
+    </section>
+
+    <!-- CLIMATE -->
+    <section class="view" id="view-climate" hidden>
+      <div class="m-card climate-big">
+        <div class="cb-mode" id="cb-mode">--</div>
+        <div class="cb-cur"><span id="cb-cur">--</span><span class="cb-deg">°</span></div>
+        <div class="cb-stepper">
+          <button class="cb-step" id="cb-down">−</button>
+          <div class="cb-target"><span class="cb-tl">Target</span><b id="cb-target">--°</b></div>
+          <button class="cb-step" id="cb-up">+</button>
+        </div>
+        <div class="cb-modes" id="cb-modes">
+          <button class="cb-modebtn" data-mode="heat">Heat</button>
+          <button class="cb-modebtn" data-mode="cool">Cool</button>
+          <button class="cb-modebtn" data-mode="heat_cool">Auto</button>
+          <button class="cb-modebtn" data-mode="off">Off</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- MORE -->
+    <section class="view" id="view-more" hidden>
+      <div class="m-section-label">Connection</div>
+      <div class="m-card statline"><span class="sl-name">Status</span><span class="sl-val" id="more-status">--</span></div>
+      <button class="more-btn" id="more-reconnect">Reconnect</button>
+      <button class="more-btn danger" id="more-forget">Forget token</button>
+      <div class="m-foot">Jarvis Mobile · tailnet-only</div>
+    </section>
+  </main>
+
+  <!-- Bottom nav -->
+  <nav class="bottomnav">
+    <button class="bn-btn active" data-view="home">
+      <svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg><span>Home</span>
+    </button>
+    <button class="bn-btn" data-view="rooms">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span>Rooms</span>
+    </button>
+    <button class="bn-btn" data-view="climate">
+      <svg viewBox="0 0 24 24"><path d="M14 14.76V5a2 2 0 0 0-4 0v9.76a4 4 0 1 0 4 0z"/></svg><span>Climate</span>
+    </button>
+    <button class="bn-btn" data-view="more">
+      <svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg><span>More</span>
+    </button>
+  </nav>
+
+  <div id="conn-dot" class="conn-dot" title="connection"></div>
+</div>
+
+<!-- ════════ SHEETS ════════ -->
+
+<!-- Govee light sheet -->
+<div id="govee-sheet" class="sheet" style="display:none;">
+  <div class="sheet-card">
+    <div class="sheet-head">
+      <div class="sheet-title" id="gp-name">Light</div>
+      <button class="sheet-close" id="gp-close">✕</button>
+    </div>
+    <div class="gp-toprow">
+      <div class="gp-swatch" id="gp-swatch"></div>
+      <button class="gp-power" id="gp-power-btn"><span id="gp-power-label">OFF</span></button>
+    </div>
+    <div class="gp-canvas-wrap" id="gp-canvas-wrap">
+      <canvas id="gp-canvas" width="320" height="180"></canvas>
+      <div class="gp-cursor" id="gp-canvas-cursor"></div>
+    </div>
+    <div class="gp-hue-row">
+      <div class="gp-hue-preview" id="gp-hue-preview"></div>
+      <input type="range" id="gp-hue-slider" class="gp-hue-slider" min="0" max="360" value="0">
+    </div>
+    <div class="gp-bri-row">
+      <span class="gp-bri-ic">☀</span>
+      <input type="range" id="gp-bri-slider" class="gp-bri-slider" min="1" max="100" value="50">
+      <span class="gp-bri-val" id="gp-bri-val">50%</span>
+    </div>
+    <div class="gp-presets" id="gp-presets">
+      <button class="gp-preset" data-r="255" data-g="255" data-b="255" style="background:#fff"></button>
+      <button class="gp-preset" data-r="255" data-g="180" data-b="107" style="background:#ffb46b"></button>
+      <button class="gp-preset" data-r="255" data-g="90" data-b="60" style="background:#ff5a3c"></button>
+      <button class="gp-preset" data-r="120" data-g="200" data-b="255" style="background:#78c8ff"></button>
+      <button class="gp-preset" data-r="90" data-g="255" data-b="150" style="background:#5aff96"></button>
+      <button class="gp-preset" data-r="200" data-g="120" data-b="255" style="background:#c878ff"></button>
+    </div>
+    <button class="gp-scene-btn" id="gp-scene-btn">Choose Scene</button>
+  </div>
+</div>
+
+<!-- Scene picker sheet -->
+<div id="scene-sheet" class="sheet" style="display:none;">
+  <div class="sheet-card">
+    <div class="sheet-head">
+      <div class="sheet-title" id="scene-title">Choose Scene</div>
+      <button class="sheet-close" id="scene-close">✕</button>
+    </div>
+    <div class="scene-grid" id="scene-grid"></div>
+  </div>
+</div>
+
+<!-- Purifier sheet -->
+<div id="pur-sheet" class="sheet" style="display:none;">
+  <div class="sheet-card">
+    <div class="sheet-head">
+      <div>
+        <div class="sheet-title" id="pp-name">Purifier</div>
+        <div class="sheet-sub" id="pp-sub">--</div>
+      </div>
+      <button class="sheet-close" id="pp-close">✕</button>
+    </div>
+    <div class="pp-ring-wrap">
+      <canvas id="pp-ring-canvas" width="240" height="240"></canvas>
+      <div class="pp-ring-center">
+        <div class="pp-aq" id="pp-aq-word">--</div>
+        <div class="pp-pm" id="pp-pm-num">PM2.5 --</div>
+      </div>
+    </div>
+    <div class="pp-modes">
+      <button class="pp-mode" id="pp-mode-auto" onclick="setPurPreset('auto')">Auto</button>
+      <button class="pp-mode" id="pp-mode-sleep" onclick="setPurPreset('sleep')">Sleep</button>
+      <button class="pp-mode" id="pp-mode-pet" onclick="setPurPreset('pet')">Pet</button>
+      <button class="pp-mode" id="pp-mode-manual" onclick="setPurManual()">Manual</button>
+    </div>
+    <div class="pp-speed-row" id="pp-speed-row" style="display:none;">
+      <button class="pp-speed" id="pp-speed-low" onclick="setPurSpeed('low')">Low</button>
+      <button class="pp-speed" id="pp-speed-med" onclick="setPurSpeed('med')">Med</button>
+      <button class="pp-speed" id="pp-speed-high" onclick="setPurSpeed('high')">High</button>
+    </div>
+    <div class="pp-meta">
+      <span>Filter <b id="pp-filter-val">--</b></span>
+    </div>
+    <div class="pp-switches">
+      <button class="pp-sw" id="pp-power" onclick="togglePurPower()">Power</button>
+      <button class="pp-sw" id="pp-display" onclick="togglePurSwitch('display')">Display</button>
+      <button class="pp-sw" id="pp-lock" onclick="togglePurSwitch('child_lock')">Lock</button>
+    </div>
+  </div>
+</div>
+
+<!-- Dishwasher sheet -->
+<div id="dw-sheet" class="sheet" style="display:none;">
+  <div class="sheet-card">
+    <div class="sheet-head">
+      <div>
+        <div class="sheet-title">Dishwasher</div>
+        <div class="sheet-sub" id="dw-sub">--</div>
+      </div>
+      <button class="sheet-close" id="dw-close">✕</button>
+    </div>
+    <div class="dw-ring-wrap">
+      <canvas id="dw-ring-canvas" width="240" height="240"></canvas>
+      <div class="dw-ring-center">
+        <div class="dw-pct" id="dw-pct">--</div>
+        <div class="dw-finish" id="dw-finish-c"></div>
+      </div>
+    </div>
+    <div class="m-section-label">Program</div>
+    <div class="dw-programs" id="dw-programs">
+      <button class="dw-prog" data-prog="dishcare_dishwasher_program_auto_2" onclick="setDishProg(this.dataset.prog)">Auto</button>
+      <button class="dw-prog" data-prog="dishcare_dishwasher_program_eco_50" onclick="setDishProg(this.dataset.prog)">Eco 50°</button>
+      <button class="dw-prog" data-prog="dishcare_dishwasher_program_intensiv_70" onclick="setDishProg(this.dataset.prog)">Intensive 70°</button>
+      <button class="dw-prog" data-prog="dishcare_dishwasher_program_quick_45" onclick="setDishProg(this.dataset.prog)">Quick 45°</button>
+      <button class="dw-prog" data-prog="dishcare_dishwasher_program_quick_65" onclick="setDishProg(this.dataset.prog)">Quick 65°</button>
+      <button class="dw-prog" data-prog="dishcare_dishwasher_program_glas_40" onclick="setDishProg(this.dataset.prog)">Glass 40°</button>
+      <button class="dw-prog" data-prog="dishcare_dishwasher_program_pre_rinse" onclick="setDishProg(this.dataset.prog)">Pre-Rinse</button>
+      <button class="dw-prog" data-prog="dishcare_dishwasher_program_machine_care" onclick="setDishProg(this.dataset.prog)">Machine Care</button>
+    </div>
+    <div class="m-section-label">Options</div>
+    <div class="dw-opts">
+      <button class="dw-opt" id="dw-opt-halfload" onclick="toggleDishSwitch('switch.dishwasher_half_load')">Half Load</button>
+      <button class="dw-opt" id="dw-opt-hygiene" onclick="toggleDishSwitch('switch.dishwasher_hygiene')">Hygiene</button>
+      <button class="dw-opt" id="dw-opt-zeolite" onclick="toggleDishSwitch('switch.dishwasher_zeolite_dry')">Zeolite Dry</button>
+    </div>
+    <div class="dw-consum">
+      <span id="dw-salt">Salt --</span>
+      <span id="dw-rinse">Rinse aid --</span>
+    </div>
+    <div class="dw-remote-hint" id="dw-remote-hint" style="display:none;">Enable Remote Start on the appliance to start a cycle.</div>
+    <div class="dw-actions">
+      <button class="dw-power" id="dw-power" onclick="toggleDishPower()">Power</button>
+      <button class="dw-start" id="dw-start" onclick="startDish()">Start</button>
+      <button class="dw-stop" id="dw-stop" onclick="stopDish()">Stop</button>
+    </div>
+  </div>
+</div>
+
+<script src="mobile.js"></script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+          <div class="tile room-tile dishwasher-cell" id="kt-dishwasher-card">
+            <div class="rt-room-label">Kitchen</div>
+            <div class="rt-icon" id="kt-dw-icon"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M4 7h16"/><path d="M7 5h.01M10 5h.01"/><circle cx="12" cy="14" r="4"/></svg></div>
+            <div class="rt-name">Dishwasher</div>
+            <div class="rt-state" id="kt-dw-state">--</div>
+            <div class="rt-actions">
+              <button class="rt-btn" id="kt-dw-power" onclick="toggleDishwasherPower()"><svg class="bi" viewBox="0 0 24 24"><path d="M12 2v10"/><path d="M18.36 5.64a9 9 0 1 1-12.72 0"/></svg><span>Power</span></button>
+              <button class="rt-btn" id="kt-dw-control" onclick="openDishwasherPanel()"><svg class="bi" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg><span>Control</span></button>
+            </div>
+            <div class="rt-meta" style="display:flex;gap:1rem;justify-content:center;font-size:0.78rem;margin-top:0.2rem;">
+              <span id="kt-dw-progress">--</span>
+              <span id="kt-dw-finish">--</span>
+            </div>
+          </div>

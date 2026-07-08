@@ -1,0 +1,71 @@
+<!-- ── Dishwasher panel (Bosch Home Connect) ── -->
+<div id="dishwasher-panel-overlay" style="display:none;position:fixed;inset:0;z-index:9998;background:rgba(0,0,0,0.65);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);align-items:center;justify-content:center;">
+  <div id="dishwasher-panel">
+    <div class="dw-top">
+      <div>
+        <div class="dw-name">Dishwasher</div>
+        <div id="dw-sub" class="dw-sub">-- · Door --</div>
+      </div>
+      <button id="dw-close" class="dw-close" onclick="closeDishwasherPanel()" aria-label="Close">
+        <svg viewBox="0 0 24 24" width="18" height="18"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+
+    <div class="dw-ringwrap">
+      <canvas id="dw-ring-canvas" width="240" height="240"></canvas>
+      <div class="dw-ring-center">
+        <div id="dw-pct" class="dw-pct">--</div>
+        <div id="dw-finish-c" class="dw-finish-c">--</div>
+      </div>
+    </div>
+
+    <div class="dw-section-label">Program</div>
+    <div id="dw-programs" class="dw-programs">
+      <button class="dw-prog" data-prog="dishcare_dishwasher_program_auto_2" onclick="setDishwasherProgram(this.dataset.prog)">Auto</button>
+      <button class="dw-prog" data-prog="dishcare_dishwasher_program_eco_50" onclick="setDishwasherProgram(this.dataset.prog)">Eco 50°</button>
+      <button class="dw-prog" data-prog="dishcare_dishwasher_program_intensiv_70" onclick="setDishwasherProgram(this.dataset.prog)">Intensive 70°</button>
+      <button class="dw-prog" data-prog="dishcare_dishwasher_program_quick_45" onclick="setDishwasherProgram(this.dataset.prog)">Quick 45°</button>
+      <button class="dw-prog" data-prog="dishcare_dishwasher_program_quick_65" onclick="setDishwasherProgram(this.dataset.prog)">Quick 65°</button>
+      <button class="dw-prog" data-prog="dishcare_dishwasher_program_glas_40" onclick="setDishwasherProgram(this.dataset.prog)">Glass 40°</button>
+      <button class="dw-prog" data-prog="dishcare_dishwasher_program_pre_rinse" onclick="setDishwasherProgram(this.dataset.prog)">Pre-Rinse</button>
+      <button class="dw-prog" data-prog="dishcare_dishwasher_program_machine_care" onclick="setDishwasherProgram(this.dataset.prog)">Machine Care</button>
+    </div>
+
+    <div class="dw-section-label">Delay start</div>
+    <div class="dw-delay">
+      <button class="dw-chip" onclick="setDishwasherDelay(0)">Off</button>
+      <button class="dw-chip" onclick="setDishwasherDelay(3600)">1h</button>
+      <button class="dw-chip" onclick="setDishwasherDelay(7200)">2h</button>
+      <button class="dw-chip" onclick="setDishwasherDelay(14400)">4h</button>
+    </div>
+
+    <div class="dw-section-label">Options</div>
+    <div class="dw-options">
+      <button id="dw-opt-halfload" class="dw-opt" onclick="toggleDishwasherSwitch('switch.dishwasher_half_load')">Half Load</button>
+      <button id="dw-opt-hygiene" class="dw-opt" onclick="toggleDishwasherSwitch('switch.dishwasher_hygiene')">Hygiene</button>
+      <button id="dw-opt-zeolite" class="dw-opt" onclick="toggleDishwasherSwitch('switch.dishwasher_zeolite_dry')">Zeolite Dry</button>
+    </div>
+
+    <div id="dw-remote-hint" class="dw-remote-hint" style="display:none;">Enable <b>Remote Start</b> on the dishwasher to start a cycle from here.</div>
+
+    <div class="dw-bottom">
+      <button id="dw-power" class="dw-action" onclick="toggleDishwasherPower()">
+        <svg viewBox="0 0 24 24" width="22" height="22"><path d="M12 3v9" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M6.4 6.4a8 8 0 1 0 11.2 0" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+        <span>Power</span>
+      </button>
+      <button id="dw-start" class="dw-action" onclick="startDishwasher()">
+        <svg viewBox="0 0 24 24" width="22" height="22"><path d="M7 5l12 7-12 7z" fill="currentColor"/></svg>
+        <span>Start</span>
+      </button>
+      <button id="dw-stop" class="dw-action" onclick="stopDishwasher()">
+        <svg viewBox="0 0 24 24" width="22" height="22"><rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor"/></svg>
+        <span>Stop</span>
+      </button>
+    </div>
+
+    <div class="dw-consumables">
+      <span id="dw-salt" class="dw-consum">Salt OK</span>
+      <span id="dw-rinse" class="dw-consum">Rinse aid OK</span>
+    </div>
+  </div>
+</div>

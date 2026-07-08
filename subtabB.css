@@ -1,0 +1,13 @@
+
+/* ── Rooms subtabs — variant B: segmented underline (approved 2026-06-07) ── */
+#rooms-view .room-subtabs { gap: 0.2rem; }
+#rooms-view .room-subtab {
+  background: transparent; border: none; border-radius: 0;
+  padding: 0.5rem 0.9rem 0.55rem; color: rgba(255,255,255,0.5);
+  border-bottom: 2px solid transparent; box-shadow: none;
+}
+#rooms-view .room-subtab:hover { background: transparent; color: rgba(255,255,255,0.85); }
+#rooms-view .room-subtab.selected {
+  background: transparent; color: #fff;
+  border-bottom: 2px solid rgba(245,170,75,0.95); box-shadow: none;
+}

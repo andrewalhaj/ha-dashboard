@@ -1,0 +1,89 @@
+
+/* ── Dishwasher panel (Bosch Home Connect) ──────────────────────── */
+#dishwasher-panel {
+  background: rgba(22,12,6,0.96);
+  border: 1px solid rgba(255,180,80,0.22);
+  border-radius: 20px;
+  padding: 20px 22px 22px;
+  width: min(460px, 92vw);
+  max-height: 92vh; overflow-y: auto;
+  display: flex; flex-direction: column; gap: 14px;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.7);
+  font-family: 'Plus Jakarta Sans', sans-serif; color: #fff;
+}
+.dw-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.dw-name { font-size: 1.15rem; font-weight: 700; }
+.dw-sub { font-size: 0.8rem; opacity: 0.6; margin-top: 2px; letter-spacing: 0.04em; }
+.dw-close {
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.7); width: 32px; height: 32px; border-radius: 9px;
+  cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  transition: background 150ms ease, color 150ms ease;
+}
+.dw-close:hover { background: rgba(255,255,255,0.12); color: #fff; }
+
+.dw-ringwrap { position: relative; align-self: center; width: 240px; height: 240px; }
+#dw-ring-canvas { display: block; width: 240px; height: 240px; }
+.dw-ring-center {
+  position: absolute; inset: 0; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 4px; pointer-events: none;
+}
+.dw-pct { font-size: 2rem; font-weight: 800; line-height: 1; }
+.dw-finish-c { font-size: 0.78rem; opacity: 0.6; letter-spacing: 0.04em; text-transform: uppercase; }
+
+.dw-section-label {
+  font-size: 0.62rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+  opacity: 0.45; margin-top: 2px;
+}
+.dw-programs { display: grid; grid-template-columns: repeat(2, 1fr); gap: 7px; }
+.dw-prog {
+  padding: 9px 8px; border-radius: 11px; cursor: pointer; text-align: center;
+  background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.10);
+  color: rgba(255,255,255,0.62); font: inherit; font-size: 0.78rem; font-weight: 600;
+  transition: background 160ms ease, border-color 160ms ease, color 160ms ease;
+}
+.dw-prog:hover { background: rgba(255,255,255,0.09); color: rgba(255,255,255,0.85); }
+.dw-prog.on {
+  background: linear-gradient(165deg, rgba(255,205,110,0.95), rgba(240,165,70,0.92));
+  border-color: rgba(255,210,130,0.7); color: #2a1606;
+}
+
+.dw-delay, .dw-options { display: grid; gap: 7px; }
+.dw-delay { grid-template-columns: repeat(4, 1fr); }
+.dw-options { grid-template-columns: repeat(3, 1fr); }
+.dw-chip, .dw-opt {
+  padding: 9px 6px; border-radius: 11px; cursor: pointer; text-align: center;
+  background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.10);
+  color: rgba(255,255,255,0.62); font: inherit; font-size: 0.78rem; font-weight: 600;
+  transition: background 160ms ease, border-color 160ms ease, color 160ms ease;
+}
+.dw-chip:hover, .dw-opt:hover { background: rgba(255,255,255,0.09); color: rgba(255,255,255,0.85); }
+.dw-chip.on, .dw-opt.on {
+  background: linear-gradient(165deg, rgba(255,205,110,0.95), rgba(240,165,70,0.92));
+  border-color: rgba(255,210,130,0.7); color: #2a1606;
+}
+
+.dw-remote-hint {
+  font-size: 0.74rem; line-height: 1.4; color: rgba(255,200,140,0.85);
+  background: rgba(245,170,75,0.10); border: 1px solid rgba(245,170,75,0.28);
+  border-radius: 10px; padding: 9px 11px;
+}
+.dw-remote-hint b { color: #ffce82; }
+
+.dw-bottom { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.dw-action {
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+  padding: 12px 4px; border-radius: 13px; cursor: pointer;
+  background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.10);
+  color: rgba(255,255,255,0.62); font: inherit; font-size: 0.72rem; font-weight: 600;
+  transition: background 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+.dw-action:hover { background: rgba(255,255,255,0.09); color: rgba(255,255,255,0.85); }
+.dw-action.on {
+  background: linear-gradient(165deg, rgba(255,205,110,0.95), rgba(240,165,70,0.92));
+  border-color: rgba(255,210,130,0.7); color: #2a1606;
+}
+.dw-action.disabled { opacity: 0.4; pointer-events: none; }
+
+.dw-consumables { display: flex; gap: 1rem; justify-content: center; font-size: 0.74rem; opacity: 0.6; margin-top: 2px; }
+.dw-consum.warn { color: #f0a546; opacity: 1; font-weight: 700; }

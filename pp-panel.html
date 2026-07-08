@@ -1,0 +1,65 @@
+<!-- ── Purifier panel (VeSync air purifier — preset modes + manual speed + AQ ring) ── -->
+<div id="purifier-panel-overlay" style="display:none;position:fixed;inset:0;z-index:9998;background:rgba(0,0,0,0.65);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);align-items:center;justify-content:center;">
+  <div id="purifier-panel">
+    <div class="pp-top">
+      <div>
+        <div id="pp-name" class="pp-name">Purifier</div>
+        <div id="pp-sub" class="pp-sub">PM2.5 -- · Air: --</div>
+      </div>
+      <button id="pp-close" class="pp-close" onclick="closePurifierPanel()" aria-label="Close">
+        <svg viewBox="0 0 24 24" width="18" height="18"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+
+    <div class="pp-ringwrap">
+      <canvas id="pp-ring-canvas" width="240" height="240"></canvas>
+      <div class="pp-ring-center">
+        <div id="pp-aq-word" class="pp-aq-word">--</div>
+        <div id="pp-pm-num" class="pp-pm-num">PM2.5 --</div>
+        <button id="pp-lock" class="pp-lock" onclick="togglePurifierSwitch('child_lock')" title="Child lock">
+          <svg viewBox="0 0 24 24" width="16" height="16"><rect x="5" y="11" width="14" height="9" rx="2" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="1.7"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="pp-modes">
+      <button id="pp-mode-auto" class="pp-mode" onclick="setPurifierPreset('auto')">
+        <svg viewBox="0 0 24 24" width="20" height="20"><path d="M12 4a8 8 0 1 0 8 8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><text x="12" y="15" font-size="8" text-anchor="middle" fill="currentColor" font-family="sans-serif" font-weight="700">A</text></svg>
+        <span>Auto</span>
+      </button>
+      <button id="pp-mode-sleep" class="pp-mode" onclick="setPurifierPreset('sleep')">
+        <svg viewBox="0 0 24 24" width="20" height="20"><path d="M19 14.5A7.5 7.5 0 0 1 9.5 5a7.5 7.5 0 1 0 9.5 9.5z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+        <span>Sleep</span>
+      </button>
+      <button id="pp-mode-pet" class="pp-mode" onclick="setPurifierPreset('pet')">
+        <svg viewBox="0 0 24 24" width="20" height="20"><circle cx="8" cy="9" r="1.6" fill="currentColor"/><circle cx="16" cy="9" r="1.6" fill="currentColor"/><circle cx="6" cy="13" r="1.6" fill="currentColor"/><circle cx="18" cy="13" r="1.6" fill="currentColor"/><path d="M12 13c2.5 0 4 2 4 3.5S14.5 19 12 19s-4-1-4-2.5S9.5 13 12 13z" fill="currentColor"/></svg>
+        <span>Pet</span>
+      </button>
+      <button id="pp-mode-manual" class="pp-mode" onclick="setPurifierManual()">
+        <svg viewBox="0 0 24 24" width="20" height="20"><circle cx="12" cy="12" r="2" fill="currentColor"/><path d="M12 10c0-4 1-7-1-7s-3 3-1 7M14 12c4 0 7-1 7 1s-3 3-7 1M10 14c-4 0-7 1-7-1s3-3 7-1M12 14c0 4-1 7 1 7s3-3 1-7" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+        <span>Manual</span>
+      </button>
+    </div>
+
+    <div id="pp-speed-row" class="pp-speed-row" style="display:none;">
+      <button id="pp-speed-low" class="pp-speed" onclick="setPurifierSpeed('low')">Low</button>
+      <button id="pp-speed-med" class="pp-speed" onclick="setPurifierSpeed('med')">Med</button>
+      <button id="pp-speed-high" class="pp-speed" onclick="setPurifierSpeed('high')">High</button>
+    </div>
+
+    <div class="pp-bottom">
+      <button id="pp-power" class="pp-action" onclick="togglePurifierPower()">
+        <svg viewBox="0 0 24 24" width="22" height="22"><path d="M12 3v9" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M6.4 6.4a8 8 0 1 0 11.2 0" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+        <span>Power</span>
+      </button>
+      <button id="pp-display" class="pp-action" onclick="togglePurifierSwitch('display')">
+        <svg viewBox="0 0 24 24" width="22" height="22"><rect x="3" y="5" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M9 21h6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <span>Display</span>
+      </button>
+      <div class="pp-action pp-filter" title="Filter life remaining">
+        <svg viewBox="0 0 24 24" width="22" height="22"><path d="M4 5h16l-6 7v6l-4 2v-8z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+        <span>Filter <b id="pp-filter-val">--</b></span>
+      </div>
+    </div>
+  </div>
+</div>
