@@ -1,0 +1,8 @@
+# Gitleaks configuration for ha-dashboard
+# See https://github.com/gitleaks/gitleaks for documentation
+
+title = "ha-dashboard gitleaks config"
+
+# Use the default ruleset as a base
+[extend]
+useDefault = true
