@@ -22,28 +22,30 @@ A kiosk-style wall-mounted dashboard for Home Assistant — a plain HTML/CSS/JS 
 
 ## Architecture
 
-```
-Browser (kiosk / tablet / phone)
-       │
-       │  http://dashboard:5051
-       ▼
-┌──────────────────────┐
-│  nginx (alpine)      │
-│  default.conf        │
-│  ─────────────────── │
-│  / → static files    │
-│  /ha-ws → HA WS      │
-│  /ha-api/ → HA REST  │
-│  /govee-api/ → Govee │
-│  /glances-api/ ...   │  (optional, commented out)
-│  /tv_snapshot.png →  │
-│    HA /local/...     │
-└──────┬───────────────┘
-       │
-       ├── ws://ha-host:8123/api/websocket          (Home Assistant)
-       ├── http://ha-host:8123/api/                  (Home Assistant REST)
-       ├── https://openapi.api.govee.com/...          (Govee cloud, optional)
-       └── http://glances-host:61208/api/4/           (Glances, optional)
+```mermaid
+flowchart LR
+    Browser["Browser (kiosk / tablet / phone)"]
+    subgraph Nginx["nginx (alpine) — default.conf"]
+        direction TB
+        root["/ → static files"]
+        ha_ws["/ha-ws → HA WebSocket"]
+        ha_api["/ha-api/ → HA REST"]
+        govee_api["/govee-api/ → Govee (optional)"]
+        glances_api["/glances-api/ (optional, commented out)"]
+        tv_snapshot["/tv_snapshot.png → HA /local/..."]
+    end
+    HA_WS["ws://ha-host:8123/api/websocket<br/>(Home Assistant)"]
+    HA_REST["http://ha-host:8123/api/<br/>(Home Assistant REST)"]
+    GoveeCloud["https://openapi.api.govee.com/...<br/>(Govee cloud, optional)"]
+    Glances["http://glances-host:61208/api/4/<br/>(Glances, optional)"]
+
+    Browser -->|"http://dashboard:5051"| Nginx
+    ha_ws --> HA_WS
+    ha_api --> HA_REST
+    govee_api --> GoveeCloud
+    glances_api -.-> Glances
+    tv_snapshot --> HA_REST
+    root --> HA_REST
 ```
 
 **No build step.** `index.html` + `dashboard.css` + `dashboard.js` are served directly. The HA WebSocket bridge is ~300 lines of self-contained JavaScript at the bottom of `index.html`.
